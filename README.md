@@ -2,7 +2,7 @@
 
 Source code of my personal site. I'm **TODO: name**, **TODO: current role**.
 
-> **Status:** The scaffold renders the portfolio from files in `content/`. Visual design is the next phase.
+> **Status:** The scaffold renders the portfolio from files in `content/`. The visual design is in review. [UI design spec](docs/superpowers/specs/2026-11-28-portfolio-ui-design.md) · [V8 prototype](docs/superpowers/prototypes/portfolio-v8.html)
 
 - Live site: TODO
 - GitHub: TODO
