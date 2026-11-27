@@ -1,0 +1,14 @@
+name: Test Person
+role: Test Engineer
+intro: I build example tools.
+careerStart: 2020-06
+languages:
+  - language: English
+    level: Professional
+links:
+  github: https://github.com/example
+  linkedin: https://example.com/test-person
+  email: test@example.com
+stack:
+  - group: Languages
+    items: [TypeScript]
