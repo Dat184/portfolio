@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { parseDocument } from "yaml";
 import type { z } from "zod";
@@ -94,10 +94,10 @@ function parseYaml<T>(
   let data: unknown;
   try {
     const document = parseDocument(source);
-    if (document.errors.length > 0) {
-      issues.push(
-        ...document.errors.map(({ message }) => `${file}: ${message}`),
-      );
+    // The parser can fall back to a plain value after warning about a tag.
+    const diagnostics = [...document.errors, ...document.warnings];
+    if (diagnostics.length > 0) {
+      issues.push(...diagnostics.map(({ message }) => `${file}: ${message}`));
       return;
     }
     if (document.contents === null) {
@@ -236,7 +236,9 @@ export function loadContent({
     diagnostics,
   );
   const projects = readProjects(contentDir, diagnostics);
-  const hasCv = existsSync(join(publicDir, "cv.pdf"));
+  const hasCv =
+    statSync(join(publicDir, "cv.pdf"), { throwIfNoEntry: false })?.isFile() ??
+    false;
   if (!hasCv) placeholders.push("public/cv.pdf");
   if (production) issues.push(...placeholders);
 

@@ -75,6 +75,7 @@ describe("loadContent", () => {
   it("loads the valid fixture", () => {
     const content = load(VALID_DIR);
     expect(content.profile.name).toBe("Test Person");
+    expect(content.profile.careerStart).toBe("2020-06");
     expect(content.experience).toHaveLength(2);
     expect(content.companyProjects[0]?.url).toBeNull();
     expect(content.placeholders).toEqual([]);
@@ -208,6 +209,18 @@ describe("loadContent", () => {
     );
   });
 
+  it("rejects an unresolved YAML tag on an otherwise valid date", () => {
+    const dir = fixture({
+      "profile.yaml": fixtureText("profile.yaml").replace(
+        "careerStart: 2020-06",
+        "careerStart: !!int 2020-06",
+      ),
+    });
+    expect(issues(dir)).toContainEqual(
+      expect.stringMatching(/^profile\.yaml: Unresolved tag:/),
+    );
+  });
+
   it("reports an empty file clearly", () => {
     const dir = fixture({ "profile.yaml": "" });
     expect(issues(dir)).toContainEqual(
@@ -285,6 +298,16 @@ describe("loadContent", () => {
     const content = load(VALID_DIR, { publicDir: EMPTY_PUBLIC_DIR });
     expect(content.hasCv).toBe(false);
     expect(content.placeholders).toEqual(["public/cv.pdf"]);
+  });
+
+  it("counts a directory called cv.pdf as a missing CV", () => {
+    const publicDir = fixture({ "cv.pdf/.gitkeep": "" });
+    const content = load(VALID_DIR, { publicDir });
+    expect(content.hasCv).toBe(false);
+    expect(content.placeholders).toEqual(["public/cv.pdf"]);
+    expect(issues(VALID_DIR, { publicDir, production: true })).toEqual([
+      "public/cv.pdf",
+    ]);
   });
 
   it("parses CRLF files", () => {
