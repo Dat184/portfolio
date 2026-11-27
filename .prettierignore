@@ -1,0 +1,11 @@
+.claude/
+.superpowers/
+.next/
+out/
+build/
+coverage/
+next-env.d.ts
+skills-lock.json
+pnpm-lock.yaml
+*.md
+*.mdx

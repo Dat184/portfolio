@@ -1,5 +1,7 @@
 # Agent Docs Foundation Implementation Plan
 
+> This document records the original setup. The current agent instructions are in [AGENTS.md](../../../AGENTS.md), technical decisions and quality gates are in the [README](../../../README.md), and the [content guide](../../../content/README.md#content-model) holds the content model. Historical commands and filenames below describe the original setup.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Turn the empty `Portfolio` folder into a git repo whose agent and human docs (`CLAUDE.md`, `README.md`, `docs/PRD.md`, `docs/ARCHITECTURE.md`, `content/` templates) and repo-level Hallmark skill let future sessions build the portfolio site without re-asking decisions or inventing content.

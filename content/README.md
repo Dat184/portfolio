@@ -18,3 +18,21 @@ Copy `projects/_template.mdx` to `projects/<slug>.mdx`, where `<slug>` is the UR
 - **Company projects are cards only.** Never add source code, internal names, metrics, or client details that are not already public.
 - **This repo is public.** No phone number, home address, or secrets in any file.
 - **CV:** put the PDF at `public/cv.pdf`, without phone number or home address. Update it by replacing the file and pushing.
+
+## Content model
+
+YAML holds structured data. MDX holds the case studies.
+
+| File | Fields |
+|---|---|
+| `content/profile.yaml` | `name`, `role`, `intro`, `careerStart` (`YYYY-MM`), `languages[]` {`language`, `level`}, `links` {`github`, `linkedin`, `email`}, `stack[]` {`group`, `items[]`} |
+| `content/experience.yaml` | list, newest first, of {`company`, `role`, `start` (`YYYY-MM`), `end` (`YYYY-MM` or `present`), `summary`, `stack[]`} |
+| `content/company-projects.yaml` | list of {`name`, `niche`, `role`, `stack[]`, `start`, `end`, `url` (`null` if there is no working live link)} |
+| `content/projects/<slug>.mdx` | frontmatter {`title`, `summary`, `stack[]`, `repo`, `demo` (`null` if none), `order` (integer, ascending on the home page)}; body sections: Problem, What I built, Challenges & solutions, Results, Links |
+
+Rules:
+
+- **Slug = file name.** `content/projects/my-tool.mdx` renders at `/projects/my-tool`.
+- **Files starting with `_` are templates** (e.g. `content/projects/_template.mdx`). The content pipeline skips them: they are never loaded, validated, or rendered.
+- **Years of experience are computed from `careerStart`**, so the number never goes stale.
+- **Build-time schema validation.** The loader in `src/lib/content/` reads YAML and MDX frontmatter and validates their fields with Zod. Invalid data fails every build. A `TODO` prefix in a string value, a line starting with `TODO` in an MDX body, or a missing `public/cv.pdf` produces a warning locally and in previews. Each blocks a deployment when `VERCEL_ENV=production`.

@@ -1,5 +1,7 @@
 # Agent Docs Foundation — Design
 
+> This document records the original setup. The current agent instructions are in [AGENTS.md](../../../AGENTS.md), technical decisions and quality gates are in the [README](../../../README.md), and the [content guide](../../../content/README.md#content-model) holds the content model. Historical commands and filenames below describe the original setup.
+
 - **Date:** 2026-11-27
 - **Status:** Approved by owner (2026-11-27)
 - **Scope:** Documentation and repo setup only. No Next.js scaffold, no dependencies, no product code.
