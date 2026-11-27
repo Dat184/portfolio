@@ -87,7 +87,7 @@ Run `pnpm dlx create-next-app@16 --help`, then create the app in `$(mktemp -d)/p
 
 - [ ] **Step 2: Move it into the repo**
 
-Copy everything except `.git/`, `node_modules/`, `README.md`, `.gitignore`, and any generated `AGENTS.md`/`CLAUDE.md` into the repo root without overwriting any existing file; append create-next-app's `.gitignore` lines that the repo's `.gitignore` lacks (keep `.claude/settings.local.json`; never ignore `.claude/skills/`). Delete the demo assets listed above and replace `src/app/page.tsx` with a placeholder `<main><h1>Portfolio</h1></main>`. Run `pnpm install`.
+Copy everything except `.git/`, `node_modules/`, `README.md`, `.gitignore`, and any generated agent instructions into the repo root without overwriting any existing file; append create-next-app's `.gitignore` lines that the repo's `.gitignore` lacks (keep `.claude/settings.local.json`; never ignore `.claude/skills/`). Delete the demo assets listed above and replace `src/app/page.tsx` with a placeholder `<main><h1>Portfolio</h1></main>`. Run `pnpm install`.
 Expected: `git status` shows only new scaffold files, `.gitignore` modified; `ls public` shows nothing.
 
 - [ ] **Step 3: Configure scope and strictness**
@@ -127,7 +127,7 @@ Expected: nothing before `scope-checked`.
 - Create fixtures: `src/lib/content/__fixtures__/valid/{profile.yaml,experience.yaml,company-projects.yaml}`, `.../valid/projects/{alpha-tool.mdx,beta-app.mdx,_template.mdx}`, `.../valid/projects/_drafts/gamma.mdx`, `.../public-cv/cv.pdf` (any bytes), `.../public-empty/.gitkeep`
 
 **Interfaces:**
-- Produces (`schema.ts`): `profileSchema`, `experienceSchema`, `companyProjectsSchema`, `projectFrontmatterSchema`; types `Profile`, `Job`, `CompanyProject`, `ProjectFrontmatter` (via `z.infer`). Fields exactly as `docs/ARCHITECTURE.md` § Content model; objects `.strict()`.
+- Produces (`schema.ts`): `profileSchema`, `experienceSchema`, `companyProjectsSchema`, `projectFrontmatterSchema`; types `Profile`, `Job`, `CompanyProject`, `ProjectFrontmatter` (via `z.infer`). Fields exactly as `content/README.md` § Content model; objects `.strict()`.
 - Produces (`load.ts`):
   - `interface LoadOptions { contentDir: string; publicDir: string; production: boolean }`
   - `interface Project extends ProjectFrontmatter { slug: string; body: string }`
@@ -267,7 +267,7 @@ Expected: fails because commitlint isn't installed yet.
 - Install `husky`, `lint-staged`, `@commitlint/cli`, `@commitlint/config-conventional`; `pnpm exec husky init`.
 - `commitlint.config.mjs`: `export default { extends: ["@commitlint/config-conventional"] };`
 - `lint-staged`: `"*.{ts,tsx,js,mjs}": ["eslint --fix --no-warn-ignored", "prettier --write"]`, `"*.{json,css,yaml,yml}": ["prettier --write"]`.
-- `.husky/pre-commit`, in order: refuse when `git symbolic-ref --short -q HEAD` is `main` (message: `Never commit on main: create a branch (see CLAUDE.md).`, exit 1; detached HEAD passes); `pnpm exec lint-staged`; `pnpm typecheck`; `pnpm test`.
+- `.husky/pre-commit`, in order: refuse when `git symbolic-ref --short -q HEAD` is `main` (message: `Never commit on main: create a branch (see AGENTS.md).`, exit 1; detached HEAD passes); `pnpm exec lint-staged`; `pnpm typecheck`; `pnpm test`.
 - `.husky/commit-msg`: `pnpm exec commitlint --edit "$1"`.
 
 - [ ] **Step 3: Verify**
@@ -296,7 +296,7 @@ Expected: pre-commit runs lint-staged, typecheck, and tests, then commits.
 ### Task 6: Docs reflect the real setup
 
 **Files:**
-- Modify: `CLAUDE.md` (§ Commands; Git workflow line about checking with `pnpm dev` until Vercel is connected), `README.md` (status line; § Run locally), `docs/ARCHITECTURE.md` (status line; Open decisions; Decision log)
+- Modify: `AGENTS.md` (§ Commands; Git workflow line about checking with `pnpm dev` until Vercel is connected), `README.md` (status, local setup, quality gates, open decisions, and decision log), and `content/README.md` (content model)
 
 **Interfaces:**
 - Consumes: scripts from Tasks 2–5.
@@ -304,28 +304,28 @@ Expected: pre-commit runs lint-staged, typecheck, and tests, then commits.
 - [ ] **Step 1: Failing check**
 
 ```bash
-for p in 'pnpm dev' 'pnpm build' 'pnpm lint' 'pnpm format' 'pnpm typecheck' 'pnpm test' 'until Vercel is connected'; do grep -qF -- "$p" CLAUDE.md || echo "MISSING CLAUDE: $p"; done
+for p in 'pnpm dev' 'pnpm build' 'pnpm lint' 'pnpm format' 'pnpm typecheck' 'pnpm test' 'until Vercel is connected'; do grep -qF -- "$p" AGENTS.md || echo "MISSING AGENTS: $p"; done
 for p in 'pnpm install' 'pnpm dev'; do grep -qF -- "$p" README.md || echo "MISSING README: $p"; done
-for p in 'pnpm' 'next-mdx-remote' 'Tailwind CSS v4' 'VERCEL_ENV' 'Prettier'; do grep -qF -- "$p" docs/ARCHITECTURE.md || echo "MISSING ARCH: $p"; done
-grep -c 'Added when the Next.js app is scaffolded' CLAUDE.md; grep -c 'No app code' README.md docs/ARCHITECTURE.md
+for p in 'pnpm' 'next-mdx-remote' 'Tailwind CSS v4' 'VERCEL_ENV' 'Prettier'; do grep -qF -- "$p" README.md || echo "MISSING README: $p"; done
+grep -c 'Added when the Next.js app is scaffolded' AGENTS.md; grep -c 'No app code' README.md
 ```
 Expected now: MISSING lines, and the old placeholder/status counts are 1.
 
 - [ ] **Step 2: Edit**
 
-- `CLAUDE.md` § Commands: one line each for `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm format`, `pnpm typecheck`, `pnpm test`, plus `VERCEL_ENV=production pnpm build` to rehearse the production gate. Git section: "until Vercel is connected, the owner checks a branch locally with `pnpm dev`". Stay ≤ 100 lines.
+- `AGENTS.md` § Commands: one line each for `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm format`, `pnpm typecheck`, `pnpm test`, plus `VERCEL_ENV=production pnpm build` to rehearse the production gate. Git section: "until Vercel is connected, the owner checks a branch locally with `pnpm dev`". Stay ≤ 100 lines.
 - `README.md`: status → scaffold in, design next; § Run locally: Node 24, `pnpm install`, `pnpm dev`.
-- `docs/ARCHITECTURE.md`: status → app scaffolded, no visual design yet; Open decisions: remove decided rows (package manager pnpm, own loader, Tailwind CSS v4, Vitest); Decision log rows (2026-11-27): pnpm; own content loader (`yaml` + `zod` + `next-mdx-remote`); Tailwind CSS v4 scoped to `src/`; `TODO` fails only `VERCEL_ENV=production` builds; Prettier skips Markdown/MDX.
+- `README.md` § Decision log: record pnpm; own content loader (`yaml` + `zod` + `next-mdx-remote`); Tailwind CSS v4 scoped to `src/`; `TODO` fails only `VERCEL_ENV=production` builds; Prettier skips Markdown/MDX. Keep open design and deployment decisions in the README and schema fields in `content/README.md`.
 
 - [ ] **Step 3: Verify**
 
-Re-run Step 1. Expected: no MISSING lines; both old counts `0`; `wc -l < CLAUDE.md` ≤ 100; no Vietnamese:
+Re-run Step 1. Expected: no MISSING lines; both old counts `0`; `wc -l < AGENTS.md` ≤ 100; no Vietnamese:
 `LC_ALL=C.UTF-8 grep -rnP --exclude-dir={.git,.claude,.superpowers,node_modules,.next} '[\x{0102}\x{0103}\x{0110}\x{0111}\x{01A0}\x{01A1}\x{01AF}\x{01B0}\x{1EA0}-\x{1EF9}]' . ; echo vi-checked` prints only `vi-checked`.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add CLAUDE.md README.md docs/ARCHITECTURE.md && git commit -m "docs: document scaffold commands and decisions" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+git add AGENTS.md README.md content/README.md && git commit -m "docs: document scaffold commands and decisions" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
 
 ---

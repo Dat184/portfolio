@@ -1,7 +1,7 @@
 set -e
 
 if [ "$(git symbolic-ref --short -q HEAD)" = main ]; then
-  echo "Never commit on main: create a branch (see CLAUDE.md)." >&2
+  echo "Never commit on main: create a branch (see AGENTS.md)." >&2
   exit 1
 fi
 

@@ -2,11 +2,11 @@
 
 - **Date:** 2026-11-27
 - **Status:** Approved by owner (2026-11-27)
-- **Builds on:** `docs/PRD.md`, `docs/ARCHITECTURE.md`, `CLAUDE.md`, and the [agent docs foundation spec](2026-11-27-agent-docs-foundation-design.md) §8.
+- **Builds on:** `docs/PRD.md`, `README.md`, `content/README.md`, `AGENTS.md`, and the [agent docs foundation spec](2026-11-27-agent-docs-foundation-design.md) §8.
 
 ## 1. Intent
 
-Lay the technical foundation the design phase will build on: a Next.js app that reads `content/` at build time, validates it, and renders it as plain, undesigned HTML, plus the quality gates `ARCHITECTURE.md` promises. The Hallmark design phase then designs the pages on top of working data, instead of mixing plumbing and design in one step.
+Lay the technical foundation the design phase will build on: a Next.js app that reads `content/` at build time, validates it, and renders it as plain, undesigned HTML, plus the quality gates documented in `README.md`. The Hallmark design phase then designs the pages on top of working data, instead of mixing plumbing and design in one step.
 
 The repo goes **public on GitHub** in this step (owner's decision), so from here on tech leads can read it. The code has to be clean, small, and obviously intentional, with no create-next-app leftovers.
 
@@ -14,7 +14,7 @@ The repo goes **public on GitHub** in this step (owner's decision), so from here
 
 Owner decided unless marked *(builder's call)*.
 
-- **GitHub repo:** created now, **public**, named `portfolio` *(name: builder's call, owner didn't object)*, English description. Squash-only settings from `CLAUDE.md` applied at creation. Current `main` (2 commits) is pushed first; this work then lands through a PR from `chore/scaffold-nextjs` *(branch name: builder's call, shown to the owner)*.
+- **GitHub repo:** created now, **public**, named `portfolio` *(name: builder's call, owner didn't object)*, English description. Squash-only settings from `AGENTS.md` applied at creation. Current `main` (2 commits) is pushed first; this work then lands through a PR from `chore/scaffold-nextjs` *(branch name: builder's call, shown to the owner)*.
 - **Vercel: not connected yet.** No Vercel project, no previews. Until it is connected, the owner checks a branch locally with `pnpm dev`.
 - **Stack:** Next.js 16 (App Router) + React 19, TypeScript strict, **pnpm** *(builder's call: pnpm 12.8.1 is installed)*, **Tailwind CSS v4**.
 - **Content pipeline: approach A**, a small loader written in this repo with `yaml` + `zod`, and `next-mdx-remote` for the MDX case studies.
@@ -28,7 +28,7 @@ Owner decided unless marked *(builder's call)*.
 - Every field in `content/` is validated at build time; a malformed value fails with a message naming the file and field.
 - The two repo rules are code with tests: `_`-prefixed files are skipped; `TODO` fails only the real production deploy.
 - Husky + commitlint + lint-staged enforce the quality gates and the "never commit on `main`" rule.
-- `CLAUDE.md`, `README.md`, and `ARCHITECTURE.md` reflect the real setup (commands, decisions).
+- `AGENTS.md`, `README.md`, and `content/README.md` document the commands, technical decisions, and content model.
 
 **Non-goals**
 
@@ -48,7 +48,7 @@ Owner decided unless marked *(builder's call)*.
 ## 4. Constraints
 
 - Public repo from the first push: no secrets, no `.env` files committed.
-- `create-next-app` refuses a non-empty directory. Scaffold into a temporary directory and move the files in, keeping every existing file (`CLAUDE.md`, `README.md`, `content/`, `docs/`, `.claude/`, `skills-lock.json`), and merge `.gitignore` by hand.
+- `create-next-app` refuses a non-empty directory. Scaffold into a temporary directory and move the files in, keeping every existing file (`AGENTS.md`, `README.md`, `content/`, `docs/`, `.claude/`, `skills-lock.json`), and merge `.gitignore` by hand.
 - Use the TypeScript major version that `create-next-app` installs for Next 16. Don't force TypeScript 7 (latest on npm) unless Next 16 supports it.
 - Tailwind v4 auto-detects class sources in every non-gitignored file, which would include Hallmark's example `.tsx`/`.html`/`.vue` files. Restrict it (`@import "tailwindcss" source("../")` with `@source not "../../.claude"`, or an equivalent) so `.claude/` is never scanned.
 - No CI: everything is enforced by Husky locally.
@@ -86,7 +86,7 @@ src/
 
 - **Inputs are parameters, not globals:** the loader takes `{ contentDir, publicDir, production }`. Pages pass `content/`, `public/`, and `production: process.env.VERCEL_ENV === "production"`; tests pass fixture directories and either mode. The loader never reads `process.env` itself.
 - **Called once per build:** pages share one cached result per process, so the placeholder warning prints once. *(Caching mechanism: builder's call.)*
-- **Files:** `profile.yaml`, `experience.yaml`, `company-projects.yaml`, `projects/*.mdx`, with exactly the fields in `docs/ARCHITECTURE.md` § Content model.
+- **Files:** `profile.yaml`, `experience.yaml`, `company-projects.yaml`, `projects/*.mdx`, with exactly the fields in `content/README.md` § Content model.
 - **Schemas are strict:** unknown keys fail, so typos like `linkdin:` are caught.
 - **Field rules:**
   - `careerStart`, `start`: `YYYY-MM`. `end`: `YYYY-MM` or `present`. `end` must not be before `start`.
@@ -127,14 +127,14 @@ src/
 
 ### 6.5 Docs updates
 
-- **`CLAUDE.md` § Commands:** the scripts above, one line each. Git section: until Vercel is connected, the owner checks a branch with `pnpm dev`.
+- **`AGENTS.md` § Commands:** the scripts above, one line each. Git section: until Vercel is connected, the owner checks a branch with `pnpm dev`.
 - **`README.md` § Run locally:** `pnpm install`, `pnpm dev`; status line updated (scaffold in, design next).
-- **`docs/ARCHITECTURE.md`:** status line updated; Open decisions table updated (package manager, pipeline, styling, tests decided); Decision log rows: pnpm, own content loader, Tailwind v4, TODO fails only production deploys, Prettier skips Markdown/MDX.
+- **`README.md` § Decision log:** pnpm, own content loader, Tailwind v4, TODO fails only production deploys, Prettier skips Markdown/MDX.
 
 ### 6.6 GitHub
 
 1. `gh repo create portfolio --public --source . --remote origin --description "<English one-liner>"` and push `main`.
-2. Apply the squash-only settings from `CLAUDE.md`.
+2. Apply the squash-only settings from `AGENTS.md`.
 3. Do the work on `chore/scaffold-nextjs`; commit the spec and plan first.
 4. At the end: ask the owner, push the branch, `gh pr create` with title `chore: scaffold next.js app` and a body linking this spec and its plan. The owner merges.
 
