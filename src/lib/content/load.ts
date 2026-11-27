@@ -236,10 +236,18 @@ export function loadContent({
     diagnostics,
   );
   const projects = readProjects(contentDir, diagnostics);
-  const hasCv =
-    statSync(join(publicDir, "cv.pdf"), { throwIfNoEntry: false })?.isFile() ??
-    false;
-  if (!hasCv) placeholders.push("public/cv.pdf");
+  let hasCv = false;
+  try {
+    hasCv =
+      statSync(join(publicDir, "cv.pdf"), {
+        throwIfNoEntry: false,
+      })?.isFile() ?? false;
+    if (!hasCv) placeholders.push("public/cv.pdf");
+  } catch (error) {
+    issues.push(
+      `public/cv.pdf: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
   if (production) issues.push(...placeholders);
 
   if (issues.length || !profile || !experience || !companyProjects) {

@@ -4,6 +4,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -307,6 +308,20 @@ describe("loadContent", () => {
     expect(content.placeholders).toEqual(["public/cv.pdf"]);
     expect(issues(VALID_DIR, { publicDir, production: true })).toEqual([
       "public/cv.pdf",
+    ]);
+  });
+
+  it("reports CV stat failures alongside invalid content", () => {
+    const dir = fixture({
+      "profile.yaml": fixtureText("profile.yaml").replace(
+        "careerStart: 2020-06",
+        "careerStart: 2020-13",
+      ),
+    });
+    symlinkSync("cv.pdf", join(dir, "cv.pdf"));
+    expect(issues(dir, { publicDir: dir, production: true })).toEqual([
+      expect.stringMatching(/^profile\.yaml careerStart:/),
+      expect.stringMatching(/^public\/cv\.pdf: .*ELOOP/),
     ]);
   });
 
