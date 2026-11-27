@@ -2,7 +2,7 @@
 
 Source code of my personal site. I'm **TODO: name**, **TODO: current role**.
 
-> **Status:** planning stage. No app code yet; the Next.js scaffold is the next piece of work.
+> **Status:** The scaffold renders the portfolio from files in `content/`. Visual design is the next phase.
 
 - Live site: TODO
 - GitHub: TODO
@@ -12,7 +12,7 @@ Source code of my personal site. I'm **TODO: name**, **TODO: current role**.
 
 This is the site I send to recruiters: who I am, what I work with, the projects I've built, and how to reach me. It's written to be read by HR in a few seconds and by tech leads in more depth.
 
-Planned stack: Next.js and TypeScript, deployed on Vercel. Details come with the scaffold.
+Next.js 16 generates the pages at build time using React 19 and TypeScript. Vercel is the planned deployment target.
 
 ## Repo map
 
@@ -32,12 +32,21 @@ I build this site with Claude Code, and I keep the decisions in this repo instea
 - Every change starts as a spec and a plan, using the [superpowers](https://github.com/obra/superpowers) workflow: brainstorm, write the spec, approve it, write the plan, then implement. Both live in `docs/superpowers/`.
 - UI work goes through Hallmark, which checks pages against common tells of generated design.
 - Content comes only from `content/`. The agent is not allowed to invent facts about me.
-- Quality gates will run in Husky hooks (lint, type check, tests, commit message format) once the scaffold is in.
+- Husky checks staged files, runs the type checker and tests, and validates commit messages.
 - From the scaffold on, each change lands on `main` as a pull request merged by squash: one commit per reviewed change.
 
 ## Run locally
 
-TODO: added with the scaffold.
+Use Node.js 24 and pnpm 12.8.1. From the repo root, run:
+
+```sh
+pnpm install
+pnpm dev
+```
+
+Open [localhost:3000](http://localhost:3000). To add a personal project, copy `content/projects/_template.mdx` to a file named for its URL, such as `content/projects/my-tool.mdx`.
+
+`pnpm build` builds a local preview with visible placeholders. Run `VERCEL_ENV=production pnpm build` to check that the content and CV are ready to publish.
 
 ## License
 

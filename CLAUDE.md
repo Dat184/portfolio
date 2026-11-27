@@ -47,7 +47,7 @@ A personal portfolio site whose job is to win over recruiters: HR skims it first
   gh pr create --base main --title "<type: message>" --body "<summary, links to spec and plan>"
   ```
   - The PR title becomes the squash commit on `main`, so it must be a valid `type: message`.
-  - The owner checks the Vercel preview deployment before merging.
+  - The owner checks the branch locally with `pnpm dev` before merging until Vercel is connected.
   - **Never merge a PR unless the owner says so.**
   - After the merge: `git switch main && git pull --ff-only && git branch -D <branch>` (`-D` because git does not see squashed branches as merged).
 - No GitHub remote yet? Stop when the branch is done and ask the owner how to land it.
@@ -60,4 +60,12 @@ A personal portfolio site whose job is to win over recruiters: HR skims it first
 
 ## Commands
 
-Added when the Next.js app is scaffolded.
+- `pnpm dev` starts the local development server.
+- `pnpm build` generates the site from `content/`.
+- `pnpm start` serves the most recent build.
+- `pnpm lint` checks source files with ESLint.
+- `pnpm format` formats code and configuration with Prettier.
+- `pnpm format:check` checks formatting without editing files.
+- `pnpm typecheck` generates Next.js route types and runs TypeScript.
+- `pnpm test` runs the Vitest suite, including validation of the repository content.
+- `VERCEL_ENV=production pnpm build` checks the deployment with production content rules.

@@ -2,11 +2,11 @@
 
 Technical decisions for this repo. Product decisions are in [`PRD.md`](PRD.md). When a technical decision is made, add a row to the [Decision log](#decision-log).
 
-Status: No app code exists yet. The sections below describe the target setup that the scaffold implements.
+The scaffold renders the home page and personal project pages as semantic HTML. Visual design and the Vercel connection are planned for later.
 
 ## Overview
 
-- **Next.js** with **TypeScript in strict mode**, deployed on **Vercel** (free tier).
+- **Next.js 16 App Router** with **React 19** and **TypeScript in strict mode**. Vercel is the deployment target.
 - **Static site.** Every page is generated at build time. No backend, no database, no runtime writes: Vercel cannot write to repo files, so all content changes go through git.
 - **Content from files.** Pages read `content/` at build time. Nothing personal is hard-coded in components.
 - **Third-party skill.** `.claude/skills/hallmark/` is the Hallmark design skill, committed as-is and pinned by `skills-lock.json`. Neither is part of the app.
@@ -27,15 +27,15 @@ Rules:
 - **Slug = file name.** `content/projects/my-tool.mdx` renders at `/projects/my-tool`.
 - **Files starting with `_` are templates** (e.g. `content/projects/_template.mdx`). The content pipeline skips them: they are never loaded, validated, or rendered.
 - **Years of experience are computed from `careerStart`**, so the number never goes stale.
-- **Build-time schema validation** (added in the scaffold): a missing or malformed field fails the build instead of rendering a blank. A value still set to `TODO` should fail a production build too.
+- **Build-time schema validation.** The loader in `src/lib/content/` reads YAML and MDX frontmatter and validates their fields with Zod. Invalid data fails every build. A `TODO` prefix in a string value, a line starting with `TODO` in an MDX body, or a missing `public/cv.pdf` produces a warning locally and in previews. Each blocks a deployment when `VERCEL_ENV=production`.
 
 ## Quality gates
 
-There is no CI service. Checks run locally through **Husky**, and the **Vercel build** is the final gate: a build that fails is never deployed.
+Checks run locally through **Husky**. Once Vercel is connected, its build will also gate deployments.
 
 | Hook | Runs |
 |---|---|
-| `pre-commit` | lint-staged (ESLint + Prettier on staged files), `tsc --noEmit`, unit tests (Vitest) |
+| `pre-commit` | Reject commits on `main`, check staged files with ESLint and Prettier, run `next typegen` and `tsc --noEmit`, then run Vitest. |
 | `commit-msg` | commitlint with the Conventional Commits types |
 | `pre-push` | reserved for slow tests (e2e), if added later |
 
@@ -45,11 +45,8 @@ There is no CI service. Checks run locally through **Husky**, and the **Vercel b
 
 | Topic | Decided in |
 |---|---|
-| Package manager | scaffold spec |
-| MDX / content pipeline library | scaffold spec |
-| Test setup details | scaffold spec |
-| Styling approach | design phase (follows Hallmark's output) |
-| Open Graph image generation | scaffold spec |
+| Visual design and design tokens | Hallmark design phase |
+| Open Graph image generation | Hallmark design phase |
 | Custom domain | before launch |
 | Analytics | after launch, if needed |
 
@@ -63,3 +60,8 @@ There is no CI service. Checks run locally through **Husky**, and the **Vercel b
 | 2026-11-27 | Husky instead of GitHub Actions | Solo repo: catching problems before the commit is enough, and Vercel's build is the last gate. |
 | 2026-11-27 | Hallmark, committed in the repo, as the only UI design skill | Anyone who clones the repo gets the same version; one design rulebook avoids conflicting rules. |
 | 2026-11-27 | GitHub PRs merged by squash | One commit per change on `main`, and a Vercel preview to check before merging. |
+| 2026-11-27 | Pin pnpm 12.8.1 and use Node.js 24 | Contributors can reproduce the dependency graph with the committed lockfile. |
+| 2026-11-27 | Use a local content loader with `yaml`, `zod`, and `next-mdx-remote` | Vitest exercises validation on fixtures and the checked-in content. The page renders each case study from its MDX body. |
+| 2026-11-27 | Scope Tailwind CSS v4 to `src/` | Classes in third-party Hallmark examples stay out of the site's CSS. |
+| 2026-11-27 | Treat placeholders as errors when `VERCEL_ENV=production` | Local builds and preview deployments work while the owner fills in content. |
+| 2026-11-27 | Exclude Markdown and MDX from Prettier | The author controls the formatting of prose and case studies. |
