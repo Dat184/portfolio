@@ -39,9 +39,11 @@ I keep project decisions and agent instructions in this repo.
 Use Node.js 24 and pnpm 12.8.1. From the repo root, run:
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 ```
+
+With the pnpm version pinned in `package.json`, `pnpm-lock.yaml` contains two YAML documents. The first records the pinned pnpm executable. The second records the app dependencies. [pnpm lockfile format](https://pnpm.io/lockfile-format)
 
 Open [localhost:3000](http://localhost:3000). To add a personal project, copy `content/projects/_template.mdx` to a file named for its URL, such as `content/projects/my-tool.mdx`.
 
