@@ -28,7 +28,7 @@ Owner decided unless marked *(builder's call)*.
 - Every field in `content/` is validated at build time; a malformed value fails with a message naming the file and field.
 - The two repo rules are code with tests: `_`-prefixed files are skipped; `TODO` fails only the real production deploy.
 - Husky + commitlint + lint-staged enforce the quality gates and the "never commit on `main`" rule.
-- `AGENTS.md`, `README.md`, and `content/README.md` document the commands, technical decisions, and content model.
+- `AGENTS.md`, `README.md`, and `content/README.md` document the commands, technical setup, and content model.
 
 **Non-goals**
 
@@ -129,7 +129,7 @@ src/
 
 - **`AGENTS.md` § Commands:** the scripts above, one line each. Git section: until Vercel is connected, the owner checks a branch with `pnpm dev`.
 - **`README.md` § Run locally:** `pnpm install`, `pnpm dev`; status line updated (scaffold in, design next).
-- **`README.md` § Decision log:** pnpm, own content loader, Tailwind v4, TODO fails only production deploys, Prettier skips Markdown/MDX.
+- **`README.md`:** pinned pnpm and production placeholder checks under local setup, content loader and Tailwind CSS v4 under the technical overview, and Prettier exclusions under quality gates.
 
 ### 6.6 GitHub
 

@@ -7,7 +7,7 @@ A personal portfolio site whose job is to win over recruiters: HR skims it first
 ## Read before you work
 
 - `docs/PRD.md`: what the site is, who it's for, pages, content rules, non-goals.
-- `README.md`: technical overview, quality gates, and decision log.
+- `README.md`: technical overview and quality gates.
 - `content/README.md`: content model and editing rules.
 - `content/`: the only source of personal facts (profile, experience, projects).
 - `docs/superpowers/specs/` and `docs/superpowers/plans/`: approved designs and plans for current and past work.
@@ -28,7 +28,7 @@ A personal portfolio site whose job is to win over recruiters: HR skims it first
 - **English** for code, comments, docs, and commit messages.
 - **TypeScript strict.** Avoid `any`.
 - **Never bypass hooks** (`--no-verify`).
-- **Record decisions.** Add a row to the Decision log in `README.md` when you make a technical decision; update `docs/PRD.md` when scope changes.
+- **Product requirements.** Update `docs/PRD.md` when scope changes.
 - **Hallmark is third-party.** Never hand-edit `.claude/skills/hallmark/` or `skills-lock.json`. To update it, run `npx skills add nutlope/hallmark --agent claude-code --copy -y` and commit as `chore: update hallmark skill`. Without `--copy` the installer creates symlinks that break for anyone who clones the repo. Its browser checks (`sloplint --render`) need Chrome and `npm i -g puppeteer-core`, which is tied to the active nvm Node version.
 
 ## Git workflow
