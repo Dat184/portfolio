@@ -1,12 +1,12 @@
 # Agent Docs Foundation Implementation Plan
 
-> This document records the original setup. The current agent instructions are in [AGENTS.md](../../../AGENTS.md), technical decisions and quality gates are in the [README](../../../README.md), and the [content guide](../../../content/README.md#content-model) holds the content model. Historical commands and filenames below describe the original setup.
+> This document records the original setup. The current agent instructions are in [AGENTS.md](../../../AGENTS.md), the technical overview and quality gates are in the [README](../../../README.md), and the [content guide](../../../content/README.md#content-model) holds the content model. Historical commands and filenames below describe the original setup.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Turn the empty `Portfolio` folder into a git repo whose agent and human docs (`CLAUDE.md`, `README.md`, `docs/PRD.md`, `docs/ARCHITECTURE.md`, `content/` templates) and repo-level Hallmark skill let future sessions build the portfolio site without re-asking decisions or inventing content.
 
-**Architecture:** Approach B from the spec: a short `CLAUDE.md` with hard rules and pointers; product detail in `docs/PRD.md`; technical decisions in `docs/ARCHITECTURE.md`; every personal fact lives in `content/` as `TODO` placeholders the owner fills in. Work happens on `docs/agent-docs-foundation` and lands on `main` by a local squash merge after owner review.
+**Architecture:** Approach B from the spec: a short `CLAUDE.md` with hard rules and pointers; product detail in `docs/PRD.md`; the technical overview in `docs/ARCHITECTURE.md`; every personal fact lives in `content/` as `TODO` placeholders the owner fills in. Work happens on `docs/agent-docs-foundation` and lands on `main` by a local squash merge after owner review.
 
 **Tech Stack:** git 2.43, Markdown, YAML, MDX frontmatter, `npx skills` (Hallmark installer), Node v24 via nvm, PyYAML 6 (verification only).
 
@@ -174,17 +174,16 @@ git commit -m "docs: add product requirements" -m "Co-Authored-By: Claude Opus 5
 
 **Interfaces:**
 - Consumes: Task 2 field names (verbatim), spec §2 repo standards, §6.5, §6.7 exclusion note, §8.
-- Produces: the `## Decision log` table that `CLAUDE.md` (Task 6) tells agents to append to.
 
 - [ ] **Step 1: Write the architecture doc**
 
-Sections: `## Overview` (static Next.js site, TypeScript strict, Vercel, no backend/database, content read from `content/` at build time), `## Content model` (Task 2 fields per file, the `_` template rule, `careerStart` rationale, YAML-vs-MDX rationale, build-time schema validation coming in the scaffold), `## Quality gates` (Husky `pre-commit`: lint-staged, `tsc --noEmit`, unit tests; `commit-msg`: commitlint; e2e later in `pre-push`; no CI, Vercel build is the final gate; `.claude/` excluded from ESLint, Prettier, lint-staged, TypeScript, Vitest), `## Open decisions` (package manager, MDX/content pipeline library, styling approach, test setup, OG image generation, custom domain, analytics; each "decided in the scaffold spec" or "design phase"), `## Decision log` (table `| Date | Decision | Why |` seeded with 2026-11-27 rows: Next.js over React SPA; Vercel; content as files in git, no `/admin`; Husky instead of GitHub Actions; Hallmark in-repo as UI skill; PR + squash merge).
+Sections: `## Overview` (static Next.js site, TypeScript strict, Vercel, no backend/database, content read from `content/` at build time), `## Content model` (Task 2 fields per file, the `_` template rule, `careerStart` rationale, YAML-vs-MDX rationale, build-time schema validation coming in the scaffold), `## Quality gates` (Husky `pre-commit`: lint-staged, `tsc --noEmit`, unit tests; `commit-msg`: commitlint; e2e later in `pre-push`; no CI, Vercel build is the final gate; `.claude/` excluded from ESLint, Prettier, lint-staged, TypeScript, Vitest), `## Open decisions` (package manager, MDX/content pipeline library, styling approach, test setup, OG image generation, custom domain, analytics; each "decided in the scaffold spec" or "design phase").
 
 - [ ] **Step 2: Verify**
 
 Run:
 ```bash
-for p in "## Overview" "## Content model" "## Quality gates" "## Open decisions" "## Decision log" "| Date | Decision | Why |" careerStart languages linkedin company-projects.yaml niche "url" "demo" "order" "_template.mdx" "tsc --noEmit" commitlint "pre-push" ".claude/" "tsconfig" "Vitest"; do grep -qF -- "$p" docs/ARCHITECTURE.md || echo "MISSING: $p"; done
+for p in "## Overview" "## Content model" "## Quality gates" "## Open decisions" careerStart languages linkedin company-projects.yaml niche "url" "demo" "order" "_template.mdx" "tsc --noEmit" commitlint "pre-push" ".claude/" "tsconfig" "Vitest"; do grep -qF -- "$p" docs/ARCHITECTURE.md || echo "MISSING: $p"; done
 LC_ALL=C.UTF-8 grep -nP '[\x{0102}\x{0103}\x{0110}\x{0111}\x{01A0}\x{01A1}\x{01AF}\x{01B0}\x{1EA0}-\x{1EF9}]' docs/ARCHITECTURE.md; echo checked
 ```
 Expected: only `checked`.
@@ -193,7 +192,7 @@ Expected: only `checked`.
 
 ```bash
 git add docs/ARCHITECTURE.md
-git commit -m "docs: add architecture and decision log" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+git commit -m "docs: add architecture overview" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
 
 ---
@@ -260,18 +259,18 @@ Expected: only `clean-check`.
 - Create: `CLAUDE.md`
 
 **Interfaces:**
-- Consumes: Task 4 `## Decision log`; Task 5 install path, install/update command, any Chrome flag needed.
+- Consumes: Task 5 install path, install/update command, any Chrome flag needed.
 
 - [ ] **Step 1: Write `CLAUDE.md`**
 
-Sections in the order of spec §6.2: `## Project`, `## Read before you work`, `## Workflow`, `## Hard rules`, `## Git workflow`, `## Commands`. Content per spec §6.2 and §2 (git rules, verbatim values: never commit on `main`, branch names `feat/<slug>` `fix/<slug>` `refactor/<slug>` `docs/<slug>` `chore/<slug>`, allowed types, `git rebase main`, `--force-with-lease`, squash-merged PR with a `type: message` title and a description linking its spec and plan, owner checks the Vercel preview, agent never merges unless told, `git branch -D` after merge, GitHub settings commands from spec §6.8). Hard rules also name Hallmark's path, its update command (re-run Task 5's command, commit as `chore: update hallmark skill`), "never edit files inside `.claude/skills/hallmark/`", and "append technical decisions to the Decision log in `docs/ARCHITECTURE.md`". `## Commands` holds only: `Added when the Next.js app is scaffolded.` Imperative bullets, no prose paragraphs except the one-paragraph `## Project`.
+Sections in the order of spec §6.2: `## Project`, `## Read before you work`, `## Workflow`, `## Hard rules`, `## Git workflow`, `## Commands`. Content per spec §6.2 and §2 (git rules, verbatim values: never commit on `main`, branch names `feat/<slug>` `fix/<slug>` `refactor/<slug>` `docs/<slug>` `chore/<slug>`, allowed types, `git rebase main`, `--force-with-lease`, squash-merged PR with a `type: message` title and a description linking its spec and plan, owner checks the Vercel preview, agent never merges unless told, `git branch -D` after merge, GitHub settings commands from spec §6.8). Hard rules also name Hallmark's path, its update command (re-run Task 5's command, commit as `chore: update hallmark skill`), "never edit files inside `.claude/skills/hallmark/`", and the requirement to update `docs/PRD.md` when scope changes. `## Commands` holds only: `Added when the Next.js app is scaffolded.` Imperative bullets, no prose paragraphs except the one-paragraph `## Project`.
 
 - [ ] **Step 2: Verify**
 
 Run:
 ```bash
 test "$(wc -l < CLAUDE.md)" -le 100 && echo "lines-ok ($(wc -l < CLAUDE.md))"
-for p in docs/PRD.md docs/ARCHITECTURE.md content/ docs/superpowers/specs docs/superpowers/plans OpenSpec TODO '--no-verify' '`any`' Hallmark .claude/skills/hallmark impeccable 'Decision log' 'feat/<slug>' 'fix/<slug>' 'docs/<slug>' refactor chore revert 'git rebase main' '--force-with-lease' squash 'gh pr create' 'git branch -D' preview 'enable-squash-merge' 'squash_merge_commit_title' 'Added when the Next.js app is scaffolded'; do grep -qF -- "$p" CLAUDE.md || echo "MISSING: $p"; done
+for p in docs/PRD.md docs/ARCHITECTURE.md content/ docs/superpowers/specs docs/superpowers/plans OpenSpec TODO '--no-verify' '`any`' Hallmark .claude/skills/hallmark impeccable 'feat/<slug>' 'fix/<slug>' 'docs/<slug>' refactor chore revert 'git rebase main' '--force-with-lease' squash 'gh pr create' 'git branch -D' preview 'enable-squash-merge' 'squash_merge_commit_title' 'Added when the Next.js app is scaffolded'; do grep -qF -- "$p" CLAUDE.md || echo "MISSING: $p"; done
 LC_ALL=C.UTF-8 grep -nP '[\x{0102}\x{0103}\x{0110}\x{0111}\x{01A0}\x{01A1}\x{01AF}\x{01B0}\x{1EA0}-\x{1EF9}]' CLAUDE.md; echo checked
 ```
 Expected: `lines-ok (N)` with N ≤ 100, then only `checked`.
@@ -341,7 +340,7 @@ Stop. Tell the owner (in Vietnamese) which files to read and that `content/` is 
 git checkout main
 git merge --squash docs/agent-docs-foundation
 git commit -m "docs: add agent docs foundation" -m "- CLAUDE.md agent rules and git workflow
-- README, PRD, architecture and decision log
+- README, PRD, and architecture overview
 - content templates for profile, experience and projects
 - Hallmark design skill installed in the repo
 - spec and plan under docs/superpowers" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"

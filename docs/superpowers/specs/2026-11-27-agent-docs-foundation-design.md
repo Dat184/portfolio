@@ -1,6 +1,6 @@
 # Agent Docs Foundation — Design
 
-> This document records the original setup. The current agent instructions are in [AGENTS.md](../../../AGENTS.md), technical decisions and quality gates are in the [README](../../../README.md), and the [content guide](../../../content/README.md#content-model) holds the content model. Historical commands and filenames below describe the original setup.
+> This document records the original setup. The current agent instructions are in [AGENTS.md](../../../AGENTS.md), the technical overview and quality gates are in the [README](../../../README.md), and the [content guide](../../../content/README.md#content-model) holds the content model. Historical commands and filenames below describe the original setup.
 
 - **Date:** 2026-11-27
 - **Status:** Approved by owner (2026-11-27)
@@ -105,7 +105,7 @@ Everything in this section was decided by the owner in conversation, unless mark
 Sections:
 
 1. **Project in one paragraph.** Portfolio for recruiters (HR first, then tech leads). Public repo. Points to `docs/PRD.md`.
-2. **Read before you work.** `docs/PRD.md` for product questions, `docs/ARCHITECTURE.md` for technical decisions, `content/` for every personal fact, `docs/superpowers/specs|plans` for current work.
+2. **Read before you work.** `docs/PRD.md` for product questions, `docs/ARCHITECTURE.md` for the technical overview, `content/` for every personal fact, `docs/superpowers/specs|plans` for current work.
 3. **Workflow.** superpowers: brainstorm → spec in `docs/superpowers/specs/` → owner approval → plan in `docs/superpowers/plans/` → implement. No feature code without an approved spec. Do not use OpenSpec.
 4. **Hard rules:**
    - Never invent personal content. If something is missing from `content/`, leave a visible `TODO` and ask.
@@ -115,7 +115,7 @@ Sections:
    - Never bypass hooks (`--no-verify`).
    - TypeScript strict; avoid `any`.
    - UI work uses the Hallmark skill; do not use `impeccable`.
-   - When a technical decision is made, record it in `docs/ARCHITECTURE.md`; when scope changes, update `docs/PRD.md`.
+   - Update `docs/PRD.md` when scope changes.
 5. **Git workflow.** The rules from section 2, stated as short imperatives: branch from `main`, branch naming, `type: message` with the allowed types, rebase onto `main` for conflicts, `--force-with-lease` only on feature branches, PR with a `type: message` title merged by squash, agent never merges unless told, GitHub repo settings to apply (section 6.8).
 6. **Commands.** Placeholder section: "Added when the Next.js app is scaffolded."
 

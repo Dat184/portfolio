@@ -296,7 +296,7 @@ Expected: pre-commit runs lint-staged, typecheck, and tests, then commits.
 ### Task 6: Docs reflect the real setup
 
 **Files:**
-- Modify: `AGENTS.md` (§ Commands; Git workflow line about checking with `pnpm dev` until Vercel is connected), `README.md` (status, local setup, quality gates, open decisions, and decision log), and `content/README.md` (content model)
+- Modify: `AGENTS.md` (§ Commands; Git workflow line about checking with `pnpm dev` until Vercel is connected), `README.md` (status, local setup, technical overview, quality gates, and open decisions), and `content/README.md` (content model)
 
 **Interfaces:**
 - Consumes: scripts from Tasks 2–5.
@@ -315,7 +315,7 @@ Expected now: MISSING lines, and the old placeholder/status counts are 1.
 
 - `AGENTS.md` § Commands: one line each for `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm format`, `pnpm typecheck`, `pnpm test`, plus `VERCEL_ENV=production pnpm build` to rehearse the production gate. Git section: "until Vercel is connected, the owner checks a branch locally with `pnpm dev`". Stay ≤ 100 lines.
 - `README.md`: status → scaffold in, design next; § Run locally: Node 24, `pnpm install`, `pnpm dev`.
-- `README.md` § Decision log: record pnpm; own content loader (`yaml` + `zod` + `next-mdx-remote`); Tailwind CSS v4 scoped to `src/`; `TODO` fails only `VERCEL_ENV=production` builds; Prettier skips Markdown/MDX. Keep open design and deployment decisions in the README and schema fields in `content/README.md`.
+- `README.md` documents the pinned pnpm version and production checks under local setup, the content loader and Tailwind CSS v4 under the technical overview, and Prettier exclusions under quality gates. Keep open design and deployment decisions in the README and schema fields in `content/README.md`.
 
 - [ ] **Step 3: Verify**
 
@@ -325,7 +325,7 @@ Re-run Step 1. Expected: no MISSING lines; both old counts `0`; `wc -l < AGENTS.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add AGENTS.md README.md content/README.md && git commit -m "docs: document scaffold commands and decisions" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+git add AGENTS.md README.md content/README.md && git commit -m "docs: document scaffold setup and commands" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
 
 ---
