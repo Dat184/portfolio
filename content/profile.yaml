@@ -1,0 +1,27 @@
+# Hero and contact data. Replace every TODO with your own facts.
+# Never fill this file with guesses: an empty TODO is better than a wrong fact.
+
+name: TODO
+role: TODO # current job title
+intro: TODO # 1-2 sentences, first person
+
+# Years of experience are computed from this date, so they never go stale.
+careerStart: TODO # YYYY-MM
+
+languages:
+  - language: TODO
+    level: TODO # e.g. native, professional working proficiency, or a test score
+
+links:
+  github: TODO # full URL
+  linkedin: TODO # full URL
+  email: TODO # shown as a mailto: link
+
+# Grouped tech stack. Add or rename groups as needed.
+stack:
+  - group: Frontend
+    items: [TODO]
+  - group: Backend
+    items: [TODO]
+  - group: Tools
+    items: [TODO]

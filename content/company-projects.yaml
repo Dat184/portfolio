@@ -1,0 +1,11 @@
+# Company projects are shown as short cards only: no detail page, no source code.
+# Write only what is safe to publish: no internal names, metrics, or client details.
+# Copy the block below once per project.
+
+- name: TODO
+  niche: TODO # the domain, e.g. e-commerce
+  role: TODO # what you did on the project
+  stack: [TODO]
+  start: TODO # YYYY-MM
+  end: TODO # YYYY-MM, or "present"
+  url: null # live URL if it still works, otherwise null
