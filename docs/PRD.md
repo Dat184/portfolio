@@ -33,13 +33,13 @@ Success means a visitor contacts me, downloads my CV, or opens my GitHub or Link
 
 In this order:
 
-1. **Hero.** Name, current role, a 1–2 sentence intro, years of experience, languages spoken, links to GitHub, LinkedIn, and email, and a **Download CV** button. Everything in this section is visible without scrolling.
-2. **Tech stack.** Grouped, e.g. Frontend / Backend / Tools.
+1. **Hero.** Name, current role, a 1–2 sentence intro, years of experience, languages spoken, links to GitHub, LinkedIn, and email, and a **Download CV** button. The recruiter essentials are visible without scrolling. A landscape image sits next to the content on desktop and below the actions on mobile.
+2. **Web development.** A short description, a static list of technologies by group, and a decorative scrolling logo strip beneath it.
 3. **Work experience.** Company, period, role, newest first.
-4. **Projects.**
+4. **Projects.** Full-width cards shown one at a time in a shared frame. Page scrolling advances or reverses the cards, then continues into the footer.
    - **Company projects:** short cards only. Niche (e.g. e-commerce), stack, my role, and a live link if one still works. No detail page.
    - **Personal projects:** a card that links to its detail page.
-5. **Contact.** Email, GitHub, LinkedIn, Download CV.
+5. **Get in touch.** A short invitation and an inline row of links to email, GitHub, and LinkedIn. The footer shares the body background.
 
 ### Personal project detail (`/projects/[slug]`)
 
